@@ -182,13 +182,13 @@ val result = res1 match {
 scala&gt; numbers.map((i: Int) =&gt; i * 2)
 res0: List[Int] = List(2, 4, 6, 8)
 </pre>
-<p>or pass in a partially evaluated function</p>
+<p>or pass in a function (the Scala compiler automatically converts our method to a function)</p>
 <pre>
 
 scala&gt; def timesTwo(i: Int): Int = i * 2
 timesTwo: (i: Int)Int
 
-scala&gt; numbers.map(timesTwo _)
+scala&gt; numbers.map(timesTwo)
 res0: List[Int] = List(2, 4, 6, 8)
 </pre>
 <h2 id="foreach">foreach</h2>
