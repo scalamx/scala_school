@@ -1,56 +1,114 @@
-      <div class="hero-unit">
-        <h1>La escuela de Scala!</h1>
-        <p>Desde &empty; hasta servicios distribuidos</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Scala School</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="/scala_school/bootstrap-1.1.0.min.css">
+
+    <style>
+    h2 { padding-top: 0px; }
+    </style>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-39101739-7', 'twitter.github.io');
+      ga('send', 'pageview');
+
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+
+            <div class="hero-unit">
+        <h1>Scala School!</h1>
+        <p>From &empty; to Distributed Service</p>
       </div>
 
       <!-- Example row of columns -->
       <div class="row">
         <div class="span8">
 
-          <p><b>Otros idiomas:</b></p>
+          <p><b>Other Languages:</b></p>
 
           <ul style="list-style-type: none;">
-          <li><a href="../index.html">Inglés</a>
-          <li><a href="../ko/index.html">한국어</a>
-          <li><a href="../ru/index.html">Русский</a>
-          <li><a href="../zh_cn/index.html">简体中文</a></b>
-          <li><a href="../es/index.html">Español</a></b>
+          <li><a href="ko/index.html">한국어</a>
+          <li><a href="ru/index.html">Русский</a>
+          <li><a href="zh_cn/index.html">简体中文</a></b>
+          <li><a href="es/index.html">Español</a></b>
           </ul>
 
-          <h2>Acerca</h2>
-          <p>Scala school comenzó como una serie de clases en Twitter para preparar ingenieros
-          experimentados para que fueran programadores productivos en <a href="http://www.scala-lang.org/">Scala</a>.
-          Scala es un lenguaje relativamente nuevo, pero toma muchos conceptos familiares. Además
-          estas clases asumen que la audiencia sabía los conceptos y mostraban como utilizarlos en Scala.
-          Además, nosotros encontramos este método muy efectivo para tener nuevos ingenieros que
-          aceleraran su proceso de desarrollo en Scala. Este es el material escrito que acompañó
-          esas clases. Nosotros encontramos que estas notas son útiles por si mismas.
+          <h2>About</h2>
+          <p>Scala school started as a series of lectures at Twitter to prepare experienced engineers to be productive <a href="http://www.scala-lang.org/">Scala</a> programmers. Scala is a relatively new language, but draws on many familiar concepts. Thus, these lectures assumed the audience knew the concepts and showed how to use them in Scala. We found this an effective way of getting new engineers up to speed quickly. This is the written material that accompanied those lectures. We have found that these are useful in their own right.
           </p>
 
-          <h2>Aproximación</h2>
-          <p>Nosotros pensamos que tiene más sentido aproximarse a la enseñanza de Scala no como si
-          fuera Java mejorado, sino como un nuevo lenguaje. No necesitas experiencia en Java, el enfoque
-          va a estar en el intérprete y en estilo híbrido funcional y orientado a objetos así como
-          el estilo de programación que hacemos aquí. Se hará énfasis en la mantenibilidad, la claridad
-          de las expresiones y en potenciarel uso del sistema de tipos.
-          </p>
-          <p>La mayoría de estas lecciones no requieren otro software además del REPL de Scala.
-            El lector se le incita a que siga el texto, pero que también vaya más allá. Utilice
-            estas lecciones como un punto de entrada para explorar el lenguaje.
-          </p>
+          <h2>Approach</h2>
+          <p>We think it makes the most sense to approach teaching Scala not as if it were an improved Java but instead as a new language. Experience in Java is not expected. Focus will be on the interpreter and the object-functional style as well as the style of programming we do here. An emphasis will be placed on maintainability, clarity of expression, and leveraging the type system.</p>
+          <p>Most of the lessons require no software other than a Scala REPL. The reader is encouraged to follow along, but also to go further! Use these lessons as a starting point to explore the language.</p>
 
-          <h2>También</h2>
+          <h2>Also</h2>
           <p>You can learn more elsewhere:
           <ul>
-          <li><strong><a href="http://twitter.github.com/effectivescala/">Scala Efectivo</a></strong> Las mejores prácticas en Twitter para Scala. Muy útil para el entendimiento de expresiones en el código de Twitter.</li>
-          <li><strong><a href="http://docs.scala-lang.org">Documentación en scala-lang.org</a></strong> Ligas a tutoriales, manuales, referencia sobre la API, libros y más.</li>
-          <li><strong><a href="http://www.scala-lang.org/api/">Documentación de la API de Scala.</a></strong></li>
+          <li><strong><a href="http://twitter.github.com/effectivescala/">Effective Scala</a></strong> Twitter's "best practices" for Scala. Useful for understanding idioms in Twitter's code.</li>
+          <li><strong><a href="http://docs.scala-lang.org">scala-lang.org Documentation</a></strong> Links to tutorials, manuals, API reference, books, ...</li>
+          <li><strong><a href="http://www.scala-lang.org/api/">Scala API Documentation</a></strong></li>
           </ul>
 
         </div>
         <div class="span6">
-          <h2>Lecciones</h2>
+          <h2>Lessons</h2>
             <dl>
+              
+                <dt><a href="basics.html">Basics</a></dt>
+                <dd>Values, functions, classes, methods, inheritance, try-catch-finally. Expression-oriented programming</dd>
+              
+                <dt><a href="basics2.html">Basics continued</a></dt>
+                <dd>Case classes, objects, packages, apply, update, Functions are Objects (uniform access principle), pattern matching.</dd>
+              
+                <dt><a href="collections.html">Collections</a></dt>
+                <dd>Lists, Maps, functional combinators (map, foreach, filter, zip, folds)</dd>
+              
+                <dt><a href="pattern-matching-and-functional-composition.html">Pattern matching & functional composition</a></dt>
+                <dd>More functions! PartialFunctions, more Pattern Matching</dd>
+              
+                <dt><a href="type-basics.html">Type & polymorphism basics</a></dt>
+                <dd>Basic Types and type polymorphism, type inference, variance, bounds, quantification</dd>
+              
+                <dt><a href="advanced-types.html">Advanced types</a></dt>
+                <dd>Advanced Types, view bounds, higher-kinded types, recursive types, structural types</dd>
+              
+                <dt><a href="sbt.html">Simple Build Tool</a></dt>
+                <dd>All about SBT, the standard Scala build tool</dd>
+              
+                <dt><a href="coll2.html">More collections</a></dt>
+                <dd>Tour of the Scala Collections library</dd>
+              
+                <dt><a href="specs.html">Testing with specs</a></dt>
+                <dd></dd>
+              
+                <dt><a href="concurrency.html">Concurrency in Scala</a></dt>
+                <dd>Runnable, Callable, threads, Futures</dd>
+              
+                <dt><a href="java.html">Java + Scala</a></dt>
+                <dd>Java interop: Using Scala from Java</dd>
+              
+                <dt><a href="finagle.html">An introduction to Finagle</a></dt>
+                <dd>Finagle primitives: Future, Service, Filter, Builder</dd>
+              
+                <dt><a href="searchbird.html">Searchbird</a></dt>
+                <dd>Building a distributed search engine using Finagle</dd>
               
             </dl>
        </div>
@@ -59,6 +117,45 @@
 
     <!-- banner -->
     <a href="https://github.com/twitter/scala_school"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
+  </body>
+</html>
+
+
+    </div> <!-- /container -->
+          Built at <a href="http://twitter.com/twitter"
+          target="_blank">@twitter</a> by
+          <a href="http://twitter.com/stevej" target="_blank">@stevej</a>,
+          <a href="http://twitter.com/marius" target="_blank">@marius</a>, and
+          <a href="http://twitter.com/lahosken" target="_blank">@lahosken</a>
+          with much help from
+          <a href="http://twitter.com/evanm" target="_blank">@evanm</a>,
+          <a href="http://twitter.com/sprsquish"
+          target="_blank">@sprsquish</a>,
+          <a href="http://twitter.com/kevino" target="_blank">@kevino</a>,
+          <a href="http://twitter.com/zuercher" target="_blank">@zuercher</a>,
+          <a href="http://twitter.com/timtrueman"
+          target="_blank">@timtrueman</a>,
+          <a href="http://twitter.com/wickman" target="_blank">@wickman</a>,
+          and <a href="http://twitter.com/mccv" target="_blank">@mccv</a>;
+          Russian translation by
+          <a href="https://github.com/appigram">appigram</a>;
+          Chinese simple translation by
+          <a href="https://github.com/jasonqu">jasonqu</a>;
+          Korean translation by
+          <a href="https://github.com/enshahar">enshahar</a>;<br />
+          <br />
+    <div id="footer">
+      <div class="inner">
+        <div class="container">
+          <p>
+
+            Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
 
   </body>
 </html>

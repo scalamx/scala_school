@@ -1,4 +1,51 @@
-<ul>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Scala School - Concurrency in Scala</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="/scala_school/bootstrap-1.1.0.min.css">
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-39101739-7', 'twitter.github.io');
+      ga('send', 'pageview');
+
+    </script>
+  </head>
+
+  <body>
+  
+    <div class="topbar">
+      <div class="fill">
+        <div class="container fixed">
+          <h3><a href="index.html">Concurrency in Scala</a></h3>
+          <ul class="nav secondary-nav">
+            
+              <li><a href="specs.html">&laquo;Previous</a></li>
+            
+            
+              <li><a href="java.html">Next&raquo;</a></li>
+            
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="padding-top: 60px;">
+      <ul>
 	<li><a href="#runnable">Runnable/Callable</a></li>
 	<li><a href="#Thread">Threads</a></li>
 	<li><a href="#executor">Executors/ExecutorService</a></li>
@@ -8,22 +55,22 @@
 	<li><a href="#solutions">Solutions</a></li>
 </ul>
 <h2 id="runnable">Runnable/Callable</h2>
-<p>Runnable tiene un metodo que no retorna valor.</p>
+<p>Runnable has a single method that returns no value.</p>
 <pre>
 trait Runnable {
   def run(): Unit
 }
 </pre>
-<p>Callable es similar a run, excepto que este si tiene valor de retorno.</p>
+<p>Callable is similar to run except that it returns a value</p>
 <pre>
 trait Callable[V] {
   def call(): V
 }
 </pre>
 <h2 id="Thread">Threads</h2>
-<p>La concurrencia de Scala esta construida por encima del modelo de concurrencia de java.</p>
-<p>En la <span class="caps">JVM</span> de Sun, con una carga de trabajo de IO pesada, podemos correr miles de hilos en una simple maquina.</p>
-<p>Un hilo contiene un Runnable. Ahora puedes llamar el metodo <code>start</code> desde el Hilo para que ejecute el Runnable.</p>
+<p>Scala concurrency is built on top of the Java concurrency model.</p>
+<p>On Sun JVMs, with a IO-heavy workload, we can run tens of thousands of threads on a single machine.</p>
+<p>A Thread takes a Runnable.  You have to call <code>start</code> on a Thread in order for it to run the Runnable.</p>
 <pre>
 scala&gt; val hello = new Thread(new Runnable {
   def run() {
@@ -36,9 +83,9 @@ scala&gt; hello.start
 hello world
 
 </pre>
-<p>Cuando veas una clase implementar Runnable, ya sabes que la intencion es ejecutarlo en un Hilo, en algun lugar, por alguien.</p>
-<h3>Aplicando Hilos</h3>
-<p>El siguiente codigo tiene algunos problemas:</p>
+<p>When you see a class implementing Runnable, you know it&#8217;s intended to run in a Thread somewhere by somebody.</p>
+<h3>Something single-threaded</h3>
+<p>Here&#8217;s a code snippet that works but has problems.</p>
 <pre>
 import java.net.{Socket, ServerSocket}
 import java.util.concurrent.{Executors, ExecutorService}
@@ -67,21 +114,21 @@ class Handler(socket: Socket) extends Runnable {
 
 (new NetworkService(2020, 2)).run
 </pre>
-<p>Cada peticion repondera con el nombre del actual Hilo, el cual siempre es <code>main</code>.</p>
-<p>El principal inconveniente con el codigo es que solo una peticion es respondida a la vez.</p>
-<p>Puedes poner cada peticion en un Hilo, con un simple cambio:</p>
+<p>Each request will respond with the name of the current Thread, which is always <code>main</code>.</p>
+<p>The main drawback with this code is that only one request at a time can be answered!</p>
+<p>You could put each request in a Thread.  Simply change</p>
 <pre>
 (new Handler(socket)).run()
 </pre>
-<p>Cambia por</p>
+<p>to</p>
 <pre>
 (new Thread(new Handler(socket))).start()
 </pre>
-<p>¿Pero que pasa si quieres reusar los hilos?, ¿O si quieres cambiar la politica de comportamiento del Hilo?</p>
+<p>but what if you want to reuse threads or have other policies about thread behavior?</p>
 <h2 id="executor">Executors</h2>
-<p>Con la llegada de Java 5, se decidio que una interfaz más abstracta para Hilos era necesaria.</p>
-<p>Puedes definir un metodo estatico <code>ExecutorService</code> en el Objeto <code>Executors</code>. Estos metodos te permiten configurar un <code>ExecutorService</code> con variaciones de politicas, como agrupar hilos.</p>
-<p>Aqui esta nuestro viejo bloque de codigo del servicio de red que ahora permite peticiones concurrentes.</p>
+<p>With the release of Java 5, it was decided that a more abstract interface to Threads was required.</p>
+<p>You can get an <code>ExecutorService</code> using static methods on the <code>Executors</code> object.  Those methods provide you to configure an <code>ExecutorService</code> with a variety of policies such as thread pooling.</p>
+<p>Here&#8217;s our old blocking network server written to allow concurrent requests.</p>
 <pre>
 import java.net.{Socket, ServerSocket}
 import java.util.concurrent.{Executors, ExecutorService}
@@ -115,7 +162,7 @@ class Handler(socket: Socket) extends Runnable {
 
 (new NetworkService(2020, 2)).run
 </pre>
-<p>Lo siguiente es la muestra de como son reusados los Hilos de forma interna.</p>
+<p>Here&#8217;s a transcript connecting to it showing how the internal threads are re-used.</p>
 <pre>
 $ nc localhost 2020
 pool-1-thread-1
@@ -130,8 +177,8 @@ $ nc localhost 2020
 pool-1-thread-2
 </pre>
 <h2 id="Future">Futures</h2>
-<p>Un <code>Future</code> representa computo asincrono. Puedes &#8220;envolver&#8221; tu computo en un Future y cuando necesites el resultado, simplemente llamas al metodo <code>get()</code> sobre tu Future. Un <code>Executor</code> regresa un <code>Future</code>. Si usas sistemas Finagle <span class="caps">RPC</span>, usas <code>Future</code> para esperar los resultados que aun no esten disponibles.</p>
-<p>Un <code>FutureTask</code> es un Runnable y esta diseñado para ser ejecutado por un <code>Executor</code></p>
+<p>A <code>Future</code> represents an asynchronous computation.  You can wrap your computation in a Future and when you need the result, you simply call a blocking <code>get()</code> method on it.  An <code>Executor</code> returns a <code>Future</code>. If you use the Finagle <span class="caps">RPC</span> system, you use <code>Future</code> instances to hold results that might not have arrived yet.</p>
+<p>A <code>FutureTask</code> is a Runnable and is designed to be run by an <code>Executor</code></p>
 <pre>
 val future = new FutureTask[String](new Callable[String]() {
   def call(): String = {
@@ -139,11 +186,11 @@ val future = new FutureTask[String](new Callable[String]() {
 }})
 executor.execute(future)
 </pre>
-<p>Ahora es necesario el resultado asi que vamos a bloqueralo hasta que este listo.</p>
+<p>Now I need the results so let&#8217;s block until its done.</p>
 <pre>
 val blockingResult = future.get()
 </pre>
-<p>Ver tambien <a href="finagle.html">Scala School&#8217;s Finagle page</a> para mas ejemplos de <code>Futures</code>, incluyendo algunas formas de combinarlos. Effective Scalaa tambien tiene contenido sobre <a href="http://twitter.github.com/effectivescala/#Twitter's standard libraries-Futures">Futures</a>.</p>
+<p><strong>See Also</strong> <a href="finagle.html">Scala School&#8217;s Finagle page</a> has plenty of examples of using <code>Future</code>s, including some nice ways to combine them. Effective Scala has opinions about <a href="http://twitter.github.com/effectivescala/#Twitter's standard libraries-Futures">Futures</a> .</p>
 <h2 id="danger">Thread Safety Problem</h2>
 <pre>
 class Person(var name: String) {
@@ -152,13 +199,13 @@ class Person(var name: String) {
   }
 }
 </pre>
-<p>Este programa no es seguro en un ambiente multi-hilos. Si dos programas tienen referencias a la misma instancia de Person y llama <code>set</code>, no puedes predecir que <code>name</code> va a estar al final de la ejecucion.</p>
-<p>En el modelo de memoria de Java, cada procesador puede mandar valores al cache L1 o L2, entonces dos hilos ejecutandose en diferentes procesadores pueden tener su propia vista de informacion.</p>
-<p>Veamos algunas herramientas para forzar a los hilos a mantener una vista consistente de informacion.</p>
+<p>This program is not safe in a multi-threaded environment.  If two threads have references to the same instance of Person and call <code>set</code>, you can&#8217;t predict what <code>name</code> will be at the end of both calls.</p>
+<p>In the Java memory model, each processor is allowed to cache values in its L1 or L2 cache so two threads running on different processors can each have their own view of data.</p>
+<p>Let&#8217;s talk about some tools that force threads to keep a consistent view of data.</p>
 <h3>Three tools</h3>
 <h4>synchronization</h4>
-<p>Mutexes proporciona semantica de propiedad. Cuando introduces un mutex, es tuyo. La forma mas comun de usar un mutex en la <span class="caps">JVM</span> es sincronizando algo. En este caso, sincronizaremos sobre nuestra Persona.</p>
-<p>En la <span class="caps">JVM</span>, puedes sincronizar cualquier instancia que no sea nula.</p>
+<p>Mutexes provide ownership semantics.  When you enter a mutex, you own it.  The most common way of using a mutex in the <span class="caps">JVM</span> is by synchronizing on something.  In this case, we&#8217;ll synchronize on our Person.</p>
+<p>In the <span class="caps">JVM</span>, you can synchronize on any instance that&#8217;s not null.</p>
 <pre>
 class Person(var name: String) {
   def set(changedName: String) {
@@ -169,8 +216,8 @@ class Person(var name: String) {
 }
 </pre>
 <h4>volatile</h4>
-<p>Java 5 cambio el modelo de memoria, volatil y sincronizado son basicamente identicos excepto que volatil permite nulos.</p>
-<p><code>sincronizado</code> permite vistas mas finas, <code>volatil</code> sincroniza en cada acceso.</p>
+<p>With Java 5&#8217;s change to the memory model, volatile and synchronized are basically identical except with volatile, nulls are allowed.</p>
+<p><code>synchronized</code> allows for more fine-grained locking.  <code>volatile</code> synchronizes on every access.</p>
 <pre>
 class Person(@volatile var name: String) {
   def set(changedName: String) {
@@ -179,7 +226,7 @@ class Person(@volatile var name: String) {
 }
 </pre>
 <h4>AtomicReference</h4>
-<p>Tambien en Java 5, gran cantidad de primitivas concurrentes de bajo nivel fueron agregadas. Una de ellas es la clase <code>AtomicReference</code>.</p>
+<p>Also in Java 5, a whole raft of low-level concurrency primitives were added. One of them is an <code>AtomicReference</code> class</p>
 <pre>
 import java.util.concurrent.atomic.AtomicReference
 
@@ -189,15 +236,15 @@ class Person(val name: AtomicReference[String]) {
   }
 }
 </pre>
-<h4>¿Cual es el costo?</h4>
-<p>@AtomicReference es la mas costosa de estas dos opciones ya que tienes que ir desde un metodo de acceso a los valores de acceso.</p>
-<p><code>volatil</code> y sincronizado estan construidos encima de los monitores de Java. Los monitores cuestan pocos si no hay contencion. Mientras que sincronizado da mucho mas control sobre la sincronizacion, habra menos contencion asi que sincronizado tiene a ser la opcion varata.</p>
-<p>Cuanto entras a puntos de sincronizacion, referencias volatiles de acceso, o AtomicReference, Java forza al procesador a limpiar(flush) el cache y proporcionar una vista de informacion consistente.</p>
-<p><span class="caps">POR</span> <span class="caps">FAVOR</span> <span class="caps">COMENTEN</span> SI <span class="caps">ESTAMOS</span> <span class="caps">MAL</span>: Este es un tema complicado, estoy seguro de que habra discuciones sobre esto.</p>
-<h3>Otras Herramientas de Java 5</h3>
-<p>Como se menciono antes con AtomicReference, Java 5 viene con muy buenas herramientas.</p>
+<h4>Does this cost anything?</h4>
+<p>@AtomicReference is the most costly of these two choices since you have to go through method dispatch to access values.</p>
+<p><code>volatile</code> and <code>synchronized</code> are built on top of Java&#8217;s built-in monitors.  Monitors cost very little if there&#8217;s no contention.  Since <code>synchronized</code> allows you more fine-grained control over when you synchronize, there will be less contention so <code>synchronized</code> tends to be the cheapest option.</p>
+<p>When you enter synchronized points, access volatile references, or deference AtomicReferences, Java forces the processor to flush their cache lines and provide a consistent view of data.</p>
+<p><span class="caps">PLEASE</span> <span class="caps">CORRECT</span> ME IF I&#8217;M <span class="caps">WRONG</span> <span class="caps">HERE</span>.  This is a complicated subject, I&#8217;m sure there will be a lengthy classroom discussion at this point.</p>
+<h3>Other neat tools from Java 5</h3>
+<p>As I mentioned with <code>AtomicReference</code>, Java 5 brought many great tools along with it.</p>
 <h4>CountDownLatch</h4>
-<p>Un <code>CountDownLatch</code> es un mecanismo para comunicar multiples hilos entre ellos.</p>
+<p>A <code>CountDownLatch</code> is a simple mechanism for multiple threads to communicate with each other.</p>
 <pre>
 val doneSignal = new CountDownLatch(2)
 doAsyncWork(1)
@@ -206,17 +253,17 @@ doAsyncWork(2)
 doneSignal.await()
 println("both workers finished!")
 </pre>
-<p>Entre otras cosas, tambien es bueno para prubas unitarias. Digamos que estas haciendo trabajo asincrono y queres asegurarte de que las funciones se completan.  Simplemente deja que tus funciones &#8220;terminen&#8221;, salgan del cerrojo y espera en el test los resultados.</p>
+<p>Among other things, it&#8217;s great for unit tests.  Let&#8217;s say you&#8217;re doing some async work and want to ensure that functions are completing.  Simply have your functions <code>countDown</code> the latch and <code>await</code> in the test.</p>
 <h4>AtomicInteger/Long</h4>
-<p>Incrementar Enteros y Longs es una tarea comun, <code>AtomicInteger</code> y <code>AtomicLong</code> fueron agregadas.</p>
+<p>Since incrementing Ints and Longs is such a common task, <code>AtomicInteger</code> and <code>AtomicLong</code> were added.</p>
 <h4>AtomicBoolean</h4>
-<p>Probablemente no tengamos que exlicar para que es esto.</p>
+<p>I probably don&#8217;t have to explain what this would be for.</p>
 <h4>ReadWriteLocks</h4>
-<p><code>ReadWriteLock</code> te permite tener &#8220;vista&#8221; de lector y escritor, la vista de lector solo bloquea cuando una vista de escritos es tomada/recibida.</p>
-<h2 id="example">Vamos a construir un motor de busqueda inseguro</h2>
-<p>Aqui esta un simple index invertido que no es seguro. Nuestro index invertio mapea partes del nombre del usuario dado.</p>
-<p>Esto esta escrito de fomra ingenua asumiendo que solo hilos-unicos tendran acceso.</p>
-<p>Veamos la alternativa del constructor default <code>this()</code> que usa un mapa-Hash mutable <code>mutable.HashMap</code>.</p>
+<p><code>ReadWriteLock</code> lets you take reader and writer locks.  reader locks only block when a writer lock is taken.</p>
+<h2 id="example">Let&#8217;s build an unsafe search engine</h2>
+<p>Here&#8217;s a simple inverted index that isn&#8217;t thread-safe.  Our inverted index maps parts of a name to a given User.</p>
+<p>This is written in a naive way assuming only single-threaded access.</p>
+<p>Note the alternative default constructor <code>this()</code> that uses a <code>mutable.HashMap</code></p>
 <pre>
 import scala.collection.mutable
 
@@ -241,11 +288,11 @@ class InvertedIndex(val userMap: mutable.Map[String, User]) {
   }
 }
 </pre>
-<p>Hemos omitido como llegar a los usuarios a traves de su index. Lo veremos mas tarde.</p>
-<h2 id="solutions">Ahora hagamoslo seguro</h2>
-<p>En nuestro ejemplo anterio, userMap no garantiza ser seguro. Miltiples clientes pueden iintentar agregar elementos al msimo tiempo y tener los mismos tipos de errores de visibilidad que vimos en nuestro primer ejemplo <code>Person</code>.</p>
-<p>Como UserMap no es un hilo-seguro, ¿como mantenemos solo un hilo en el timepo de mutacion?</p>
-<p>Podrias considerar echarle un vistazo a userMap mientras agrega.</p>
+<p>I&#8217;ve left out how to get users out of our index for now.  We&#8217;ll get to that later.</p>
+<h2 id="solutions">Let&#8217;s make it safe</h2>
+<p>In our inverted index example above, userMap is not guaranteed to be safe.  Multiple clients could try to add items at the same time and have the same kinds of visibility errors we saw in our first <code>Person</code> example.</p>
+<p>Since userMap isn&#8217;t thread-safe, how we do we keep only a single thread at a time mutating it?</p>
+<p>You might consider locking on userMap while adding.</p>
 <pre>
 def add(user: User) {
   userMap.synchronized {
@@ -255,7 +302,7 @@ def add(user: User) {
   }
 }
 </pre>
-<p>Desafortunadamente, esto es demasiado bruto (coarse). Siempre trata de hacer todo el trabajo costoso fuera del mutex. Recuerda usar lo &#8220;varato&#8221; si es que no hay contencion. Si haces menos trabajo dento del bloque, habra menos contencion.</p>
+<p>Unfortunately, this is too coarse.  Always try to do as much expensive work outside of the mutex as possible.  Remember what I said about locking being cheap if there is no contention.  If you do less work inside of a block, there will be less contention.</p>
 <pre>
 def add(user: User) {
   // tokenizeName was measured to be the most expensive operation.
@@ -269,8 +316,8 @@ def add(user: User) {
 }
 </pre>
 <h2>SynchronizedMap</h2>
-<p>Podemos combinar sincronizacion con un HasMap mutable usando el rasgo SynchronizedMap.</p>
-<p>Podemos extender nuestro anterior InvertedIndex para dar a los usuario una fomra facil de construir el index sincronizado.</p>
+<p>We can mixin synchronization with a mutable HashMap using the SynchronizedMap trait.</p>
+<p>We can extend our existing InvertedIndex to give users an easy way to build the synchronized index.</p>
 <pre>
 import scala.collection.mutable.SynchronizedMap
 
@@ -278,10 +325,10 @@ class SynchronizedInvertedIndex(userMap: mutable.Map[String, User]) extends Inve
   def this() = this(new mutable.HashMap[String, User] with SynchronizedMap[String, User])
 }
 </pre>
-<p>Si obserbas la implementacion, notaras que es simple sincronizar en cada metodo mientras que sea seguro, podria no tener el rendimiento que esperas.</p>
+<p>If you look at the implementation, you realize that it&#8217;s simply synchronizing on every method so while it&#8217;s safe, it might not have the performance you&#8217;re hoping for.</p>
 <h2>Java ConcurrentHashMap</h2>
-<p>Java viene con ConcurrentHashMap hilo-seguro. Agradeciendo, podemos usar JavaConverters para dar una bonita semantica en Scala.</p>
-<p>De hecho, podemos suponer que nuestro nuevo InvertedIndex de hilo-seguro es una extencion del viejo-inseguro.</p>
+<p>Java comes with a nice thread-safe ConcurrentHashMap.  Thankfully, we can use JavaConverters to give us nice Scala semantics.</p>
+<p>In fact, we can seamlessly layer our new, thread-safe InvertedIndex as an extension of the old unsafe one.</p>
 <pre>
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.JavaConverters._
@@ -292,8 +339,8 @@ class ConcurrentInvertedIndex(userMap: collection.mutable.ConcurrentMap[String, 
   def this() = this(new ConcurrentHashMap[String, User] asScala)
 }
 </pre>
-<h2>Carguemos nuestro InvertedIndex</h2>
-<h3>La forma ingenua</h3>
+<h2>Let&#8217;s load our InvertedIndex</h2>
+<h3>The naive way</h3>
 <pre>
 
 trait UserMaker {
@@ -310,10 +357,10 @@ class FileRecordProducer(path: String) extends UserMaker {
   }
 }
 </pre>
-<p>Para cada linea en nuestro archivo, llamamos <code>makeUser</code> y entonces lo <code>agregamos</code> a nuestro InvertedIndex. Si usamos un InvertedIndex concurrente, podemos llamar makeUser en paralelo y no tener efectos colaterales, ahora es seguro.</p>
-<p>No podemos leer un archivo en paralelo pero <em>podemos</em> construir al Usuario y agregarlo al index en paralelo.</p>
-<h3>Una  solucion: Productor/Consumidor</h3>
-<p>Un patron comun para computación asincrona es separar los productores de los consumidores y comunicarlos solo con un <code>Queue</code>. Veamos como funciona para nuestro motor de busqueda.</p>
+<p>For every line in our file, we call <code>makeUser</code> and then <code>add</code> it to our InvertedIndex.  If we use a concurrent InvertedIndex, we can call add in parallel and since makeUser has no side-effects, it&#8217;s already thread-safe.</p>
+<p>We can&#8217;t read a file in parallel but we <em>can</em> build the User and add it to the index in parallel.</p>
+<h3>A solution: Producer/Consumer</h3>
+<p>A common pattern for async computation is to separate producers from consumers and have them only communicate via a <code>Queue</code>.  Let&#8217;s walk through how that would work for our search engine indexer.</p>
 <pre>
 import java.util.concurrent.{BlockingQueue, LinkedBlockingQueue}
 
@@ -363,3 +410,41 @@ for (i &lt;- i to cores) {
   pool.submit(new IndexerConsumer[String](index, q))
 }
 </pre>
+    </div> <!-- /container -->
+
+    <div id="footer">
+      <div class="inner">
+        <div class="container">
+          <p>
+
+          Built at <a href="http://twitter.com/twitter"
+          target="_blank">@twitter</a> by
+          <a href="http://twitter.com/stevej" target="_blank">@stevej</a>,
+          <a href="http://twitter.com/marius" target="_blank">@marius</a>, and
+          <a href="http://twitter.com/lahosken" target="_blank">@lahosken</a>
+          with much help from
+          <a href="http://twitter.com/evanm" target="_blank">@evanm</a>,
+          <a href="http://twitter.com/sprsquish"
+          target="_blank">@sprsquish</a>,
+          <a href="http://twitter.com/kevino" target="_blank">@kevino</a>,
+          <a href="http://twitter.com/zuercher" target="_blank">@zuercher</a>,
+          <a href="http://twitter.com/timtrueman"
+          target="_blank">@timtrueman</a>,
+          <a href="http://twitter.com/wickman" target="_blank">@wickman</a>,
+          and <a href="http://twitter.com/mccv" target="_blank">@mccv</a>;
+          Russian translation by
+          <a href="https://github.com/appigram">appigram</a>;
+          Chinese simple translation by
+          <a href="https://github.com/jasonqu">jasonqu</a>;
+          Korean translation by
+          <a href="https://github.com/enshahar">enshahar</a>;<br />
+          <br />
+
+          Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
