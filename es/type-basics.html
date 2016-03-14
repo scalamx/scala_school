@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Scala School - Type & polymorphism basics</title>
+    <title>Scala School - Lo básico sobre tipos y polimorfismo</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -30,7 +30,7 @@
     <div class="topbar">
       <div class="fill">
         <div class="container fixed">
-          <h3><a href="index.html">Type & polymorphism basics</a></h3>
+          <h3><a href="index.html">Lo básico sobre tipos y polimorfismo</a></h3>
           <ul class="nav secondary-nav">
             
               <li><a href="pattern-matching-and-functional-composition.html">&laquo;Previous</a></li>
@@ -45,50 +45,71 @@
     </div>
 
     <div class="container" style="padding-top: 60px;">
-      <p>This lesson covers:</p>
+      <p>Esta lección cubre:</p>
 <ul>
-	<li><a href="#background">What are static types?</a></li>
-	<li><a href="#scala">Types in Scala</a></li>
-	<li><a href="#parametricpoly">Parametric Polymorphism</a></li>
-	<li><a href="#inference">Type inference: Hindley-Milner vs. local type inference</a></li>
-	<li><a href="#variance">Variance</a></li>
-	<li><a href="#bounds">Bounds</a></li>
-	<li><a href="#quantification">Quantification</a></li>
+	<li><a href="#background">¿Qué son los tipos estáticos?</a></li>
+	<li><a href="#scala">Tipos en Scala</a></li>
+	<li><a href="#parametricpoly">Polimorfismo Paramétrico</a></li>
+	<li><a href="#inference">Inferencia de tipos: Hindley-Milner vs. inferencia local de tipos</a></li>
+	<li><a href="#variance" title="Variance">Varianza</a></li>
+	<li><a href="#bounds" title="Bounds">Límites</a></li>
+	<li><a href="#quantification" title="Quantification">Cuantificación</a></li>
 </ul>
-<h2 id="background">What are static types?  Why are they useful?</h2>
-<p>According to Pierce: &#8220;A type system is a syntactic method for automatically checking the absence of certain erroneous behaviors by classifying program phrases according to the kinds of values they compute.&#8221;</p>
-<p>Types allow you to denote function domain &amp; codomains. For example, from mathematics, we are used to seeing:</p>
+<h2 id="background">¿Qué son los tipos estáticos?  ¿Por qué son útiles?</h2>
+<p>De acuerdo con Pierce: &#8220;Un sistema de tipos es un método sintáctico para automáticamente<br />
+revisar la ausencia de ciertos comportamientos erroneos mediante la clasificación de frases<br />
+en el programa con los tipos valores que computan&#8221;According to Pierce: &#8220;A type system i<br />
+s a syntactic method for automatically checking the absence of certain erroneous<br />
+behaviors by classifying program phrases according to the kinds of values they compute.&#8221;</p>
+<p>Los tipos permiten denotar el dominio de la función y codominio. Por ejemplo,<br />
+en matemáticas estamos acostumbrados a ver:</p>
 <pre>
 f: R -&gt; N
 </pre>
-<p>this tells us that function &#8220;f&#8221; maps values from the set of real numbers to values of the set of natural numbers.</p>
-<p>In the abstract, this is exactly what <em>concrete</em> types are.  Type systems give us some more powerful ways to express these sets.</p>
-<p>Given these annotations, the compiler can now <em>statically</em> (at compile time) verify that the program is <em>sound</em>. That is, compilation will fail if values (at runtime) will not comply to the constraints imposed by the program.</p>
-<p>Generally speaking, the typechecker can only guarantee that <em>unsound</em> programs do not compile. It cannot guarantee that every sound program <em>will</em> compile.</p>
-<p>With increasing expressiveness in type systems, we can produce more reliable code because it allows us to prove invariants about our program before it even runs (modulo bugs in the types themselves, of course!). Academia is pushing the limits of expressiveness very hard, including value-dependent types!</p>
-<p>Note that all type information is removed at compile time. It is no longer needed. This is called erasure.</p>
-<h2 id="scala">Types in Scala</h2>
-<p>Scala&#8217;s powerful type system allows for very rich expression. Some of its chief features are:</p>
+<p>Esto nos dice que la functión &#8220;f&#8221;  mapea los valores de un conjunto de<br />
+números reales a los valores del conjunto de los números naturales.</p>
+<p>En el abstracto esto es exactamente lo que son los tipos <em>concretos</em>. El sistema<br />
+de tipos nos da maneras más poderosas de expresar estos conjuntos.</p>
+<p>Dadas estas anotaciones, ahora el compilador puede verificar <em>estáticamente</em><br />
+(en tiempo de compilación) verificar que el programa sea <em>sólido</em>. Eso es, que<br />
+en tiempo de compilación va a fallar si los valores (en tiempo de ejecución )<br />
+no cumplirán con las limitaciones impuestas por el programa.</p>
+<p>Generalmente hablando,  el <strong>typechecker</strong> solo puede garantizar que los programas<br />
+que no son <strong>sólidos</strong> no compilen. Sin embargo, no puede garantizar que cada<br />
+programa <strong>sólido</strong> va a compilar.</p>
+<p>Con la creciente expresividad en el sistema de tipos, nosotros podemos producir<br />
+código más confiable porque nos permite probar invarianzas sobre nuestro programa<br />
+incluso antes de que se corra (es como hacer módulo a los bugs con los tipos!).<br />
+La academia está empujando los límites de la expresividad fuertemente, incluyendo<br />
+los tipos que dependen de valores.</p>
+<p>Note que toda la información de tipos ha sido removida en tiempo de compilación.<br />
+Ya que no se necesita más, esto es llamado <strong>type erasure</strong> o <strong>borrado de tipos</strong>.</p>
+<h2 id="scala">Tipos en Scala</h2>
+<p>El poderoso sistema de tipos de Scala nos permite hacer expresiones muy ricas.<br />
+Algunas de ellas son funcionalidades jefe que son:</p>
 <ul>
-	<li><strong>parametric polymorphism</strong> roughly, generic programming</li>
-	<li><strong>(local) type inference</strong> roughly, why you needn&#8217;t say <code>val i: Int = 12: Int</code></li>
-	<li><strong>existential quantification</strong> roughly, defining something <em>for some</em> unnamed type</li>
-	<li><strong>views</strong> we&#8217;ll learn these next week; roughly, &#8220;castability&#8221; of values of one type to another</li>
+	<li><strong>Polimorfismo paramétrico</strong> que es burdamente programación genérica.</li>
+	<li><strong>Inferencia (local) de tipos</strong> que es burdamente la razón por la cual no necesitas escribir  <code> val i: Int = 12: Int</code>.</li>
+	<li><strong>Cuantificación existencial</strong> que es burdamente la razón por la cual puedes definir <em>for some</em> tipo indefinido.</li>
+	<li><strong>vistas</strong> nosotros vamos a aprender la semana siguiente; de manera burda el &#8220;moldeamiento/casting&#8221; de valores de un tipo a otro.</li>
 </ul>
-<h2 id="parametricpoly">Parametric polymorphism</h2>
-<p>Polymorphism is used in order to write generic code (for values of different types) without compromising static typing richness.</p>
-<p>For example, without parametric polymorphism, a generic list data structure would always look like this (and indeed it did look like this in Java prior to generics):</p>
+<h2 id="parametricpoly">Polimorfismo paramétrico</h2>
+<p>El polimorfismo se usa para poder escribir código genérico (para valores de<br />
+tipos distintos) sin comprometer la riqueza del tipo estático.</p>
+<p>Por ejemplo, sin el polimorfismo paramétrico, una estructura de datos de lista genérica<br />
+siempre se verá como esto (y de hecho se veía así en Java antes de genéricos):</p>
 <pre>
 scala&gt; 2 :: 1 :: "bar" :: "foo" :: Nil
 res5: List[Any] = List(2, 1, bar, foo)
 </pre>
-<p>Now we cannot recover any type information about the individual members.</p>
+<p>Ahora, no podemor recuperar ningún tipo de información de miembros individuales.</p>
 <pre>
 scala&gt; res5.head
 res6: Any = 2
 </pre>
-<p>And so our application would devolve into a series of casts (&#8220;asInstanceOf[]&#8221;) and we would lack type safety (because these are all dynamic).</p>
-<p>Polymorphism is achieved through specifying <em>type variables</em>.</p>
+<p>Y así nuestra aplicación devolvería una serie de <strong>moldeamientos (casts)</strong> (&#8220;asInstanceOf[]&#8221;)<br />
+y nosotros tendríamos falta de seguridad de tipos (porque todos son dinámicos).</p>
+<p>El polimorfismo se logra a través de especificar <em>variables de tipo</em>.</p>
 <pre>
 scala&gt; def drop1[A](l: List[A]) = l.tail
 drop1: [A](l: List[A])List[A]
@@ -96,36 +117,44 @@ drop1: [A](l: List[A])List[A]
 scala&gt; drop1(List(1,2,3))
 res1: List[Int] = List(2, 3)
 </pre>
-<h3>Scala has rank-1 polymorphism</h3>
-<p>Roughly, this means that there are some type concepts you&#8217;d like to express in Scala that are &#8220;too generic&#8221; for the compiler to understand. Suppose you had some function</p>
+<h3>Scala tiene polimorfismo de rank-1</h3>
+<p>De manera burda quiere decir que hay algunos conceptos de tipos que quisieras<br />
+expresar en Scala que tal vez sean &#8220;muy genéricos&#8221; para que el compilador<br />
+los entienda. Supon que tiene una función:</p>
 <pre>
 def toList[A](a: A) = List(a)
 </pre>
-<p>which you wished to use generically:</p>
+<p>La cual quisieras que usara genericamente:</p>
 <pre>
 def foo[A, B](f: A =&gt; List[A], b: B) = f(b)
 </pre>
-<p>This does not compile, because all type variables have to be fixed at the invocation site. Even if you &#8220;nail down&#8221; type <code>B</code>,</p>
+<p>Esto no compila, porque todas las variables de tipo que tienen que ser<br />
+definidas en el sitio donde se invocan. Incluso si quieras &#8220;clavar&#8221;<br />
+el tipo <code>B</code> because all type variables have to be fixed at the invocation site. Even if you &#8220;nail down&#8221; type <code>B</code>,</p>
 <pre>
 def foo[A](f: A =&gt; List[A], i: Int) = f(i)
 </pre>
-<p>&#8230;you get a type mismatch.</p>
-<h2 id="inference">Type inference</h2>
-<p>A traditional objection to static typing is that it has much syntactic overhead. Scala alleviates this by providing <em>type inference</em>.</p>
-<p>The classic method for type inference in functional programming languages is <em>Hindley-Milner</em>, and it was first employed in ML.</p>
-<p>Scala&#8217;s type inference system works a little differently, but it&#8217;s similar in spirit: infer constraints, and attempt to unify a type.</p>
-<p>In Scala, for example, you cannot do the following:</p>
+<p>&#8230;obtendrías un <strong>type mismatch</strong>.</p>
+<h2 id="inference">Inferencia de Tipos</h2>
+<p>Una objeción tradicional del tipado estático es que tiene mucha carga sintáctica.<br />
+Scala disminuye esto proviendo <em>inferencia de tipos</em>.</p>
+<p>El método clásico para inferencia de tipos en programación funcional es el<br />
+<em>Hindley-Milner</em>, y es el que se empleó por primera vez en ML.</p>
+<p>La inferencia de tipos de Scala trabaja un poco diferente, pero es similar en<br />
+espíritu: infiere restricciones y hace un intento de unificar a un tipo.</p>
+<p>En Scala, por ejemplo, no puedes  hacer lo siguiente:</p>
 <pre>
 scala&gt; { x =&gt; x }
 &lt;console&gt;:7: error: missing parameter type
        { x =&gt; x }
 </pre>
-<p>Whereas in OCaml, you can:</p>
+<p>Mientras que en OCaml tu puedes:</p>
 <pre>
 # fun x -&gt; x;;
 - : 'a -&gt; 'a = &lt;fun&gt;
 </pre>
-<p>In scala all type inference is <em>local</em>. Scala considers one expression at a time. For example:</p>
+<p>En Scala toda la inferencia de tipos es <em>local</em>. Scala considera una expresión<br />
+a la vez. Por ejemplo:</p>
 <pre>
 scala&gt; def id[T](x: T) = x
 id: [T](x: T)T
@@ -139,32 +168,42 @@ x: java.lang.String = hey
 scala&gt; val x = id(Array(1,2,3,4))
 x: Array[Int] = Array(1, 2, 3, 4)
 </pre>
-<p>Types are now preserved, The Scala compiler infers the type parameter for us. Note also how we did not have to specify the return type explicitly.</p>
-<h2 id="variance">Variance</h2>
-<p>Scala&#8217;s type system has to account for class hierarchies together with polymorphism.  Class hierarchies allow the expression of subtype relationships. A central question that comes up when mixing OO with polymorphism is: if <tt>T&#8217;</tt> is a subclass of <tt>T</tt>, is <tt>Container[T&#8217;]</tt> considered a subclass of <tt>Container[T]</tt>? Variance annotations allow you to express the following relationships between class hierarchies &amp; polymorphic types:</p>
+<p>Los tipos ahora son preservados, el compilador de Scala infiera el parametro<br />
+de tipo por nosotros. Nota también como no tuvimos que especificar el tipo de<br />
+retorno explicitamente.</p>
+<h2 id="variance">Varianza<br />
+El sistema de tipos de Scala tiene que considerar la jerarquía de clases en<br />
+conjunto con el polimorfismo. La jerarquía de clases permite la expresión de<br />
+relaciones de subtipos. Una pregunta central que salta cuando mezclas la<br />
+programación Orientada a Ibjetos con Polimorfismo es:</h2>
+<p>si <tt>T&#8217;</tt> es una subclase de <tt>T</tt>, entonces ¿<tt>Container[T&#8217;]</tt><br />
+es considerado una subclase de <tt>Container[T]</tt>?</p>
+<p>Las anotaciones de varianza te permiten expresar las siguientes relaciones entre<br />
+las jerarquías de clases y los tipos polimórficos:</p>
 <table>
 	<tr>
-		<td>                </td>
-		<td><strong>Meaning</strong>                     </td>
+		<td>                                </td>
+		<td><strong>Meaning</strong>                         </td>
 		<td> <strong>Scala notation</strong></td>
 	</tr>
 	<tr>
-		<td><strong>covariant</strong>     </td>
-		<td>C[T&#8217;] is a subclass of C[T]   </td>
+		<td><strong>covarianza(Covariant)</strong>         </td>
+		<td>C[T&#8217;] es una subclase de C[T]     </td>
 		<td> [+T]</td>
 	</tr>
 	<tr>
-		<td><strong>contravariant</strong> </td>
-		<td>C[T] is a subclass of C[T&#8217;]   </td>
+		<td><strong>contravarianza(Contravariant)</strong> </td>
+		<td>C[T] es una subclase de C[T&#8217;]     </td>
 		<td> [-T]</td>
 	</tr>
 	<tr>
-		<td><strong>invariant</strong>     </td>
-		<td>C[T] and C[T&#8217;] are not related</td>
+		<td><strong>invarianz(Invariant)a</strong>         </td>
+		<td>C[T] y C[T&#8217;] no están relacionadas</td>
 		<td> [T]</td>
 	</tr>
 </table>
-<p>The subtype relationship really means: for a given type T, if T&#8217; is a subtype, can you substitute it?</p>
+<p>La relación de subtipos quiere decir en realidad: Para un tipo T, si T&#8217; es un<br />
+subtipo, ¿se puede sustituir?</p>
 <pre>
 scala&gt; class Covariant[+A]
 defined class Covariant
@@ -194,11 +233,12 @@ scala&gt; val fail: Contravariant[AnyRef] = new Contravariant[String]
        val fail: Contravariant[AnyRef] = new Contravariant[String]
                                      ^
 </pre>
-<p>Contravariance seems strange. When is it used? Somewhat surprising!</p>
+<p>La contravarianza parece extraña- Cuanso se usa? Parecería sorprendente</p>
 <pre>
 trait Function1 [-T1, +R] extends AnyRef
 </pre>
-<p>If you think about this from the point of view of substitution, it makes a lot of sense. Let&#8217;s first define a simple class hierarchy:</p>
+<p>Si tu piensas a cerca de esto desde el punto de vista de la sustitución tiene<br />
+mucho sentido. Vamos a definir primero una jerarquía de clases simple:</p>
 <pre>
 scala&gt; class Animal { val sound = "rustle" }
 defined class Animal
@@ -209,22 +249,31 @@ defined class Bird
 scala&gt; class Chicken extends Bird { override val sound = "cluck" }
 defined class Chicken
 </pre>
-<p>Suppose you need a function that takes a <code>Bird</code> param:</p>
+<p>Supon que tienes una función que toma <code>Bird</code> como parámetro:</p>
 <pre>
 scala&gt; val getTweet: (Bird =&gt; String) = // TODO
 </pre>
-<p>The standard animal library has a function that does what you want, but it takes an <code>Animal</code> parameter instead.  In most situations, if you say &#8220;I need a ___, I have a subclass of ___&#8221;, you&#8217;re OK. But function parameters are contravariant. If you need a function that takes a <code>Bird</code> and you have a function that takes an <code>Chicken</code>, that function would choke on a <code>Duck</code>. But a function that takes an <code>Animal</code> is OK:</p>
+<p>La biblioteca estándar de animales (animal) tiene una función que hace  lo que<br />
+tu quieras pero toma un parámetro <code>Animal</code> en su lugar. En la mayoría<br />
+de las situaciones si tu dices &#8220;Necesito un ___, y yo tengo una subclase de ___&#8221;,<br />
+estás bien. Pero si tu necesitas una función que tome un <code>Bird</code> y tu<br />
+tienes una función que toma un <code>Chicken</code>, esa función se atoraría<br />
+con un <code>Duck</code>. Pero una función que toma un <code>Animal</code> está<br />
+bien:</p>
 <pre>
 scala&gt; val getTweet: (Bird =&gt; String) = ((a: Animal) =&gt; a.sound )
 getTweet: Bird =&gt; String = &lt;function1&gt;
 </pre>
-<p>A function&#8217;s return value type is covariant. If you need a function that returns a <code>Bird</code> but have a function that returns a <code>Chicken</code>, that&#8217;s great.</p>
+<p>Una función que regresa  un valor de tipo es covariante. Si tu necesitas una<br />
+función que regrese un <code>Bird</code>, pero tienes una función que regresa<br />
+un <code>Chicken</code>, eso está muy bien.</p>
 <pre>
 scala&gt; val hatch: (() =&gt; Bird) = (() =&gt; new Chicken )
 hatch: () =&gt; Bird = &lt;function0&gt;
 </pre>
-<h2 id="bounds">Bounds</h2>
-<p>Scala allows you to restrict polymorphic variables using <em>bounds</em>. These bounds express subtype relationships.</p>
+<h2 id="bounds">Límites (bounds)</h2>
+<p>Scala te permite restringir variables polimórficas utilizando <em>límites(bounds)</em>.<br />
+Estos límites expresan relaciones de subtipo.</p>
 <pre>
 scala&gt; def cacophony[T](things: Seq[T]) = things map (_.sound)
 &lt;console&gt;:7: error: value sound is not a member of type parameter T
@@ -237,7 +286,11 @@ biophony: [T &lt;: Animal](things: Seq[T])Seq[java.lang.String]
 scala&gt; biophony(Seq(new Chicken, new Bird))
 res5: Seq[java.lang.String] = List(cluck, call)
 </pre>
-<p>Lower type bounds are also supported; they come in handy with contravariance and clever covariance. <code>List[+T]</code> is covariant; a list of Birds is a list of Animals. <code>List</code> defines an operator <code>::(elem T)</code> that returns a new <code>List</code> with <code>elem</code> prepended. The new <code>List</code> has the same type as the original:</p>
+<p>Los límites de tipo más bajos también se soportan, ellos son muy útiles con<br />
+contravarianza y covarianza astuta. <code>List[+T]</code> es covariante, una lista<br />
+de pájaros (Birds) es una lista de Animales(Animals). <code>List</code> define<br />
+un  operador <code>::(elem T)</code> que regresa una nueva <code>List</code> con <code>elem</code><br />
+prependizado. El nuevo  <code>List</code> tiene el mismo tipo que el original:</p>
 <pre>
 scala&gt; val flock = List(new Bird, new Bird)
 flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
@@ -245,40 +298,45 @@ flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
 scala&gt; new Chicken :: flock
 res53: List[Bird] = List(Chicken@56fbda05, Bird@7e1ec70e, Bird@169ea8d2)
 </pre>
-<p><code>List</code> <em>also</em> defines <code>::[B &gt;: T](x: B)</code> which returns a <code>List[B]</code>. Notice the <code>B &gt;: T</code>. That specifies type <code>B</code> as a superclass of <code>T</code>. That lets us do the right thing when prepending an <code>Animal</code> to a <code>List[Bird]</code>:</p>
+<p><code>List</code> <em>también</em> define <code>::[B &gt;: T](x: B)</code> que regresa una<br />
+<code>List[B]</code>. Date cuenta que <code>B &gt;: T</code>. Que especifica el tipo<br />
+<code>B</code> como una <em>súper clase(superclass)</em> de <code>T</code>. Eso nos deja<br />
+hacer las cosas correctas cuando prependizamos un <code>Animal</code><br />
+a un <code>List[Bird]</code>:</p>
 <pre>
 scala&gt; new Animal :: flock
 res59: List[Animal] = List(Animal@11f8d3a8, Bird@7e1ec70e, Bird@169ea8d2)
 </pre>
-<p>Note that the return type is <code>List[Animal]</code>.</p>
-<h2 id="quantification">Quantification</h2>
-<p>Sometimes you do not care to be able to name a type variable, for example:</p>
+<p>Nota que el tipo de retorno es <code>List[Animal]</code>.</p>
+<h2 id="quantification">Cuantificación</h2>
+<p>Alguna veces no tienes el cuidado de nombrar una variable tipo, por ejemplo:</p>
 <pre>
 scala&gt; def count[A](l: List[A]) = l.size
 count: [A](List[A])Int
 </pre>
-<p>Instead you can use &#8220;wildcards&#8221;:</p>
+<p>En su lugar puedes utilizar &#8220;wildcards&#8221;:</p>
 <pre>
 scala&gt; def count(l: List[_]) = l.size
 count: (List[_])Int
 </pre>
-<p>This is shorthand for:</p>
+<p>Esto es un atajo para:</p>
 <pre>
 scala&gt; def count(l: List[T forSome { type T }]) = l.size
 count: (List[T forSome { type T }])Int
 </pre>
-<p>Note that quantification can get tricky:</p>
+<p>Nota que la cuantificación se puede poner truculenta:</p>
 <pre>
 scala&gt; def drop1(l: List[_]) = l.tail
 drop1: (List[_])List[Any]
 </pre>
-<p>Suddenly we lost type information! To see what&#8217;s going on, revert to the heavy-handed syntax:</p>
+<p>De pronto perdimos la información de tipo! Para ver que es lo que pasa,<br />
+revierte los cambios a la sintáxis más detallada:</p>
 <pre>
 scala&gt; def drop1(l: List[T forSome { type T }]) = l.tail
 drop1: (List[T forSome { type T }])List[T forSome { type T }]
 </pre>
-<p>We can&#8217;t say anything about T because the type does not allow it.</p>
-<p>You may also apply bounds to wildcard type variables:</p>
+<p>No podemos decir nada sobre T porque el tipo no nos permite hacerlo.</p>
+<p>Tu también puedes aplicar límites a las variables de tipo <em>wildcard</em>:</p>
 <pre>
 scala&gt; def hashcodes(l: Seq[_ &lt;: AnyRef]) = l map (_.hashCode)
 hashcodes: (Seq[_ &lt;: AnyRef])Seq[Int]
@@ -295,7 +353,7 @@ You can safely force boxing by casting x.asInstanceOf[AnyRef].
 scala&gt; hashcodes(Seq("one", "two", "three"))
 res1: Seq[Int] = List(110182, 115276, 110339486)
 </pre>
-<p><strong>See Also</strong> <a href="http://www.drmaciver.com/2008/03/existential-types-in-scala/">Existential types in Scala by D. R. MacIver</a></p>
+<p><strong>También puedes ver</strong> <a href="http://www.drmaciver.com/2008/03/existential-types-in-scala/">Existential types in Scala by D. R. MacIver</a></p>
     </div> <!-- /container -->
 
     <div id="footer">
