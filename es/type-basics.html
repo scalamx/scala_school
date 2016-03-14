@@ -56,37 +56,21 @@
 	<li><a href="#quantification" title="Quantification">Cuantificación</a></li>
 </ul>
 <h2 id="background">¿Qué son los tipos estáticos?  ¿Por qué son útiles?</h2>
-<p>De acuerdo con Pierce: &#8220;Un sistema de tipos es un método sintáctico para automáticamente<br />
-revisar la ausencia de ciertos comportamientos erroneos mediante la clasificación de frases<br />
-en el programa con los tipos valores que computan&#8221;According to Pierce: &#8220;A type system i<br />
-s a syntactic method for automatically checking the absence of certain erroneous<br />
-behaviors by classifying program phrases according to the kinds of values they compute.&#8221;</p>
-<p>Los tipos permiten denotar el dominio de la función y codominio. Por ejemplo,<br />
-en matemáticas estamos acostumbrados a ver:</p>
+<p>De acuerdo con Pierce: &#8220;Un sistema de tipos es un método sintáctico para automáticamente revisar la ausencia de ciertos comportamientos erroneos mediante la clasificación de frases en el programa con los tipos valores que computan&#8221;According to Pierce: &#8220;A type system i<br />
+s a syntactic method for automatically checking the absence of certain erroneous behaviors by classifying program phrases according to the kinds of values they compute.&#8221;</p>
+<p>Los tipos permiten denotar el dominio de la función y codominio. Por ejemplo, en matemáticas estamos acostumbrados a ver:</p>
 <pre>
 f: R -&gt; N
 </pre>
-<p>Esto nos dice que la functión &#8220;f&#8221;  mapea los valores de un conjunto de<br />
-números reales a los valores del conjunto de los números naturales.</p>
-<p>En el abstracto esto es exactamente lo que son los tipos <em>concretos</em>. El sistema<br />
-de tipos nos da maneras más poderosas de expresar estos conjuntos.</p>
-<p>Dadas estas anotaciones, ahora el compilador puede verificar <em>estáticamente</em><br />
-(en tiempo de compilación) verificar que el programa sea <em>sólido</em>. Eso es, que<br />
-en tiempo de compilación va a fallar si los valores (en tiempo de ejecución )<br />
-no cumplirán con las limitaciones impuestas por el programa.</p>
-<p>Generalmente hablando,  el <strong>typechecker</strong> solo puede garantizar que los programas<br />
-que no son <strong>sólidos</strong> no compilen. Sin embargo, no puede garantizar que cada<br />
-programa <strong>sólido</strong> va a compilar.</p>
-<p>Con la creciente expresividad en el sistema de tipos, nosotros podemos producir<br />
-código más confiable porque nos permite probar invarianzas sobre nuestro programa<br />
-incluso antes de que se corra (es como hacer módulo a los bugs con los tipos!).<br />
-La academia está empujando los límites de la expresividad fuertemente, incluyendo<br />
+<p>Esto nos dice que la functión &#8220;f&#8221;  mapea los valores de un conjunto de números reales a los valores del conjunto de los números naturales.</p>
+<p>En el abstracto esto es exactamente lo que son los tipos <em>concretos</em>. El sistema de tipos nos da maneras más poderosas de expresar estos conjuntos.</p>
+<p>Dadas estas anotaciones, ahora el compilador puede verificar <em>estáticamente</em> (en tiempo de compilación) verificar que el programa sea <em>sólido</em>. Eso es, que en tiempo de compilación va a fallar si los valores (en tiempo de ejecución ) no cumplirán con las limitaciones impuestas por el programa.</p>
+<p>Generalmente hablando,  el <strong>typechecker</strong> solo puede garantizar que los programas que no son <strong>sólidos</strong> no compilen. Sin embargo, no puede garantizar que cada programa <strong>sólido</strong> va a compilar.</p>
+<p>Con la creciente expresividad en el sistema de tipos, nosotros podemos producir código más confiable porque nos permite probar invarianzas sobre nuestro programa incluso antes de que se corra (es como hacer módulo a los bugs con los tipos!). La academia está empujando los límites de la expresividad fuertemente, incluyendo<br />
 los tipos que dependen de valores.</p>
-<p>Note que toda la información de tipos ha sido removida en tiempo de compilación.<br />
-Ya que no se necesita más, esto es llamado <strong>type erasure</strong> o <strong>borrado de tipos</strong>.</p>
+<p>Note que toda la información de tipos ha sido removida en tiempo de compilación. Ya que no se necesita más, esto es llamado <strong>type erasure</strong> o <strong>borrado de tipos</strong>.</p>
 <h2 id="scala">Tipos en Scala</h2>
-<p>El poderoso sistema de tipos de Scala nos permite hacer expresiones muy ricas.<br />
-Algunas de ellas son funcionalidades jefe que son:</p>
+<p>El poderoso sistema de tipos de Scala nos permite hacer expresiones muy ricas. Algunas de ellas son funcionalidades jefe que son:</p>
 <ul>
 	<li><strong>Polimorfismo paramétrico</strong> que es burdamente programación genérica.</li>
 	<li><strong>Inferencia (local) de tipos</strong> que es burdamente la razón por la cual no necesitas escribir  <code> val i: Int = 12: Int</code>.</li>
@@ -94,21 +78,18 @@ Algunas de ellas son funcionalidades jefe que son:</p>
 	<li><strong>vistas</strong> nosotros vamos a aprender la semana siguiente; de manera burda el &#8220;moldeamiento/casting&#8221; de valores de un tipo a otro.</li>
 </ul>
 <h2 id="parametricpoly">Polimorfismo paramétrico</h2>
-<p>El polimorfismo se usa para poder escribir código genérico (para valores de<br />
-tipos distintos) sin comprometer la riqueza del tipo estático.</p>
-<p>Por ejemplo, sin el polimorfismo paramétrico, una estructura de datos de lista genérica<br />
-siempre se verá como esto (y de hecho se veía así en Java antes de genéricos):</p>
+<p>El polimorfismo se usa para poder escribir código genérico (para valores de tipos distintos) sin comprometer la riqueza del tipo estático.</p>
+<p>Por ejemplo, sin el polimorfismo paramétrico, una estructura de datos de lista genérica siempre se verá como esto (y de hecho se veía así en Java antes de genéricos):</p>
 <pre>
 scala&gt; 2 :: 1 :: "bar" :: "foo" :: Nil
 res5: List[Any] = List(2, 1, bar, foo)
 </pre>
-<p>Ahora, no podemor recuperar ningún tipo de información de miembros individuales.</p>
+<p>Ahora, no podemos recuperar ningún tipo de información de miembros individuales.</p>
 <pre>
 scala&gt; res5.head
 res6: Any = 2
 </pre>
-<p>Y así nuestra aplicación devolvería una serie de <strong>moldeamientos (casts)</strong> (&#8220;asInstanceOf[]&#8221;)<br />
-y nosotros tendríamos falta de seguridad de tipos (porque todos son dinámicos).</p>
+<p>Y así nuestra aplicación devolvería una serie de <strong>moldeamientos (casts)</strong> (&#8220;asInstanceOf[]&#8221;) y nosotros tendríamos falta de seguridad de tipos (porque todos son dinámicos).</p>
 <p>El polimorfismo se logra a través de especificar <em>variables de tipo</em>.</p>
 <pre>
 scala&gt; def drop1[A](l: List[A]) = l.tail
@@ -118,9 +99,7 @@ scala&gt; drop1(List(1,2,3))
 res1: List[Int] = List(2, 3)
 </pre>
 <h3>Scala tiene polimorfismo de rank-1</h3>
-<p>De manera burda quiere decir que hay algunos conceptos de tipos que quisieras<br />
-expresar en Scala que tal vez sean &#8220;muy genéricos&#8221; para que el compilador<br />
-los entienda. Supon que tiene una función:</p>
+<p>De manera burda quiere decir que hay algunos conceptos de tipos que quisieras expresar en Scala que tal vez sean &#8220;muy genéricos&#8221; para que el compilador los entienda. Supon que tiene una función:</p>
 <pre>
 def toList[A](a: A) = List(a)
 </pre>
@@ -128,20 +107,15 @@ def toList[A](a: A) = List(a)
 <pre>
 def foo[A, B](f: A =&gt; List[A], b: B) = f(b)
 </pre>
-<p>Esto no compila, porque todas las variables de tipo que tienen que ser<br />
-definidas en el sitio donde se invocan. Incluso si quieras &#8220;clavar&#8221;<br />
-el tipo <code>B</code> because all type variables have to be fixed at the invocation site. Even if you &#8220;nail down&#8221; type <code>B</code>,</p>
+<p>Esto no compila, porque todas las variables de tipo que tienen que ser definidas en el sitio donde se invocan. Incluso si quieras &#8220;clavar&#8221; el tipo <code>B</code> because all type variables have to be fixed at the invocation site. Even if you &#8220;nail down&#8221; type <code>B</code>,</p>
 <pre>
 def foo[A](f: A =&gt; List[A], i: Int) = f(i)
 </pre>
 <p>&#8230;obtendrías un <strong>type mismatch</strong>.</p>
 <h2 id="inference">Inferencia de Tipos</h2>
-<p>Una objeción tradicional del tipado estático es que tiene mucha carga sintáctica.<br />
-Scala disminuye esto proviendo <em>inferencia de tipos</em>.</p>
-<p>El método clásico para inferencia de tipos en programación funcional es el<br />
-<em>Hindley-Milner</em>, y es el que se empleó por primera vez en ML.</p>
-<p>La inferencia de tipos de Scala trabaja un poco diferente, pero es similar en<br />
-espíritu: infiere restricciones y hace un intento de unificar a un tipo.</p>
+<p>Una objeción tradicional del tipado estático es que tiene mucha carga sintáctica. Scala disminuye esto proviendo <em>inferencia de tipos</em>.</p>
+<p>El método clásico para inferencia de tipos en programación funcional es el <em>Hindley-Milner</em>, y es el que se empleó por primera vez en ML.</p>
+<p>La inferencia de tipos de Scala trabaja un poco diferente, pero es similar en espíritu: infiere restricciones y hace un intento de unificar a un tipo.</p>
 <p>En Scala, por ejemplo, no puedes  hacer lo siguiente:</p>
 <pre>
 scala&gt; { x =&gt; x }
@@ -153,8 +127,7 @@ scala&gt; { x =&gt; x }
 # fun x -&gt; x;;
 - : 'a -&gt; 'a = &lt;fun&gt;
 </pre>
-<p>En Scala toda la inferencia de tipos es <em>local</em>. Scala considera una expresión<br />
-a la vez. Por ejemplo:</p>
+<p>En Scala toda la inferencia de tipos es <em>local</em>. Scala considera una expresión a la vez. Por ejemplo:</p>
 <pre>
 scala&gt; def id[T](x: T) = x
 id: [T](x: T)T
@@ -168,18 +141,10 @@ x: java.lang.String = hey
 scala&gt; val x = id(Array(1,2,3,4))
 x: Array[Int] = Array(1, 2, 3, 4)
 </pre>
-<p>Los tipos ahora son preservados, el compilador de Scala infiera el parametro<br />
-de tipo por nosotros. Nota también como no tuvimos que especificar el tipo de<br />
-retorno explicitamente.</p>
-<h2 id="variance">Varianza<br />
-El sistema de tipos de Scala tiene que considerar la jerarquía de clases en<br />
-conjunto con el polimorfismo. La jerarquía de clases permite la expresión de<br />
-relaciones de subtipos. Una pregunta central que salta cuando mezclas la<br />
-programación Orientada a Ibjetos con Polimorfismo es:</h2>
-<p>si <tt>T&#8217;</tt> es una subclase de <tt>T</tt>, entonces ¿<tt>Container[T&#8217;]</tt><br />
-es considerado una subclase de <tt>Container[T]</tt>?</p>
-<p>Las anotaciones de varianza te permiten expresar las siguientes relaciones entre<br />
-las jerarquías de clases y los tipos polimórficos:</p>
+<p>Los tipos ahora son preservados, el compilador de Scala infiera el parametro de tipo por nosotros. Nota también como no tuvimos que especificar el tipo de retorno explicitamente.</p>
+<h2 id="variance">Varianza</h2>
+<p>El sistema de tipos de Scala tiene que considerar la jerarquía de clases en conjunto con el polimorfismo. La jerarquía de clases permite la expresión de relaciones de subtipos. Una pregunta central que salta cuando mezclas la programación Orientada a Ibjetos con Polimorfismo es: si <tt>T&#8217;</tt> es una subclase de <tt>T</tt>, entonces ¿<tt>Container[T&#8217;]</tt> es considerado una subclase de <tt>Container[T]</tt>?</p>
+<p>Las anotaciones de varianza te permiten expresar las siguientes relaciones entre las jerarquías de clases y los tipos polimórficos:</p>
 <table>
 	<tr>
 		<td>                                </td>
@@ -202,8 +167,7 @@ las jerarquías de clases y los tipos polimórficos:</p>
 		<td> [T]</td>
 	</tr>
 </table>
-<p>La relación de subtipos quiere decir en realidad: Para un tipo T, si T&#8217; es un<br />
-subtipo, ¿se puede sustituir?</p>
+<p>La relación de subtipos quiere decir en realidad: Para un tipo T, si T&#8217; es un subtipo, ¿se puede sustituir?</p>
 <pre>
 scala&gt; class Covariant[+A]
 defined class Covariant
@@ -233,12 +197,11 @@ scala&gt; val fail: Contravariant[AnyRef] = new Contravariant[String]
        val fail: Contravariant[AnyRef] = new Contravariant[String]
                                      ^
 </pre>
-<p>La contravarianza parece extraña- Cuanso se usa? Parecería sorprendente</p>
+<p>La contravarianza parece extraña. ¿Cuándo se usa?  te podría parecer sorprendente.</p>
 <pre>
 trait Function1 [-T1, +R] extends AnyRef
 </pre>
-<p>Si tu piensas a cerca de esto desde el punto de vista de la sustitución tiene<br />
-mucho sentido. Vamos a definir primero una jerarquía de clases simple:</p>
+<p>Si tu piensas a cerca de esto desde el punto de vista de la sustitución tiene mucho sentido. Vamos a definir primero una jerarquía de clases simple:</p>
 <pre>
 scala&gt; class Animal { val sound = "rustle" }
 defined class Animal
@@ -253,27 +216,19 @@ defined class Chicken
 <pre>
 scala&gt; val getTweet: (Bird =&gt; String) = // TODO
 </pre>
-<p>La biblioteca estándar de animales (animal) tiene una función que hace  lo que<br />
-tu quieras pero toma un parámetro <code>Animal</code> en su lugar. En la mayoría<br />
-de las situaciones si tu dices &#8220;Necesito un ___, y yo tengo una subclase de ___&#8221;,<br />
-estás bien. Pero si tu necesitas una función que tome un <code>Bird</code> y tu<br />
-tienes una función que toma un <code>Chicken</code>, esa función se atoraría<br />
-con un <code>Duck</code>. Pero una función que toma un <code>Animal</code> está<br />
-bien:</p>
+<p>La biblioteca estándar de animales (animal) tiene una función que hace  lo que tu quieras pero toma un parámetro <code>Animal</code> en su lugar. En la mayoría<br />
+de las situaciones si tu dices &#8220;Necesito un ___, y yo tengo una subclase de ___&#8221;, estás bien. Pero si tu necesitas una función que tome un <code>Bird</code> y tu tienes una función que toma un <code>Chicken</code>, esa función se atoraría con un <code>Duck</code>. Pero una función que toma un <code>Animal</code> está bien:</p>
 <pre>
 scala&gt; val getTweet: (Bird =&gt; String) = ((a: Animal) =&gt; a.sound )
 getTweet: Bird =&gt; String = &lt;function1&gt;
 </pre>
-<p>Una función que regresa  un valor de tipo es covariante. Si tu necesitas una<br />
-función que regrese un <code>Bird</code>, pero tienes una función que regresa<br />
-un <code>Chicken</code>, eso está muy bien.</p>
+<p>Una función que regresa  un valor de tipo es covariante. Si tu necesitas una función que regrese un <code>Bird</code>, pero tienes una función que regresa un <code>Chicken</code>, eso está muy bien.</p>
 <pre>
 scala&gt; val hatch: (() =&gt; Bird) = (() =&gt; new Chicken )
 hatch: () =&gt; Bird = &lt;function0&gt;
 </pre>
 <h2 id="bounds">Límites (bounds)</h2>
-<p>Scala te permite restringir variables polimórficas utilizando <em>límites(bounds)</em>.<br />
-Estos límites expresan relaciones de subtipo.</p>
+<p>Scala te permite restringir variables polimórficas utilizando <em>límites(bounds)</em>. Estos límites expresan relaciones de subtipo.</p>
 <pre>
 scala&gt; def cacophony[T](things: Seq[T]) = things map (_.sound)
 &lt;console&gt;:7: error: value sound is not a member of type parameter T
@@ -286,11 +241,8 @@ biophony: [T &lt;: Animal](things: Seq[T])Seq[java.lang.String]
 scala&gt; biophony(Seq(new Chicken, new Bird))
 res5: Seq[java.lang.String] = List(cluck, call)
 </pre>
-<p>Los límites de tipo más bajos también se soportan, ellos son muy útiles con<br />
-contravarianza y covarianza astuta. <code>List[+T]</code> es covariante, una lista<br />
-de pájaros (Birds) es una lista de Animales(Animals). <code>List</code> define<br />
-un  operador <code>::(elem T)</code> que regresa una nueva <code>List</code> con <code>elem</code><br />
-prependizado. El nuevo  <code>List</code> tiene el mismo tipo que el original:</p>
+<p>Los límites de tipo más bajos también se soportan, ellos son muy útiles con contravarianza y covarianza astuta. <code>List[+T]</code> es covariante, una lista<br />
+de pájaros (Birds) es una lista de Animales(Animals). <code>List</code> define un  operador <code>::(elem T)</code> que regresa una nueva <code>List</code> con <code>elem</code> prependizado. El nuevo  <code>List</code> tiene el mismo tipo que el original:</p>
 <pre>
 scala&gt; val flock = List(new Bird, new Bird)
 flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
@@ -298,11 +250,8 @@ flock: List[Bird] = List(Bird@7e1ec70e, Bird@169ea8d2)
 scala&gt; new Chicken :: flock
 res53: List[Bird] = List(Chicken@56fbda05, Bird@7e1ec70e, Bird@169ea8d2)
 </pre>
-<p><code>List</code> <em>también</em> define <code>::[B &gt;: T](x: B)</code> que regresa una<br />
-<code>List[B]</code>. Date cuenta que <code>B &gt;: T</code>. Que especifica el tipo<br />
-<code>B</code> como una <em>súper clase(superclass)</em> de <code>T</code>. Eso nos deja<br />
-hacer las cosas correctas cuando prependizamos un <code>Animal</code><br />
-a un <code>List[Bird]</code>:</p>
+<p><code>List</code> <em>también</em> define <code>::[B &gt;: T](x: B)</code> que regresa una <code>List[B]</code>. Date cuenta que <code>B &gt;: T</code>. Que especifica el tipo <code>B</code> como una <em>súper clase(superclass)</em> de <code>T</code>. Eso nos deja<br />
+hacer las cosas correctas cuando prependizamos un <code>Animal</code> a un <code>List[Bird]</code>:</p>
 <pre>
 scala&gt; new Animal :: flock
 res59: List[Animal] = List(Animal@11f8d3a8, Bird@7e1ec70e, Bird@169ea8d2)
@@ -329,8 +278,7 @@ count: (List[T forSome { type T }])Int
 scala&gt; def drop1(l: List[_]) = l.tail
 drop1: (List[_])List[Any]
 </pre>
-<p>De pronto perdimos la información de tipo! Para ver que es lo que pasa,<br />
-revierte los cambios a la sintáxis más detallada:</p>
+<p>De pronto perdimos la información de tipo! Para ver que es lo que pasa, revierte los cambios a la sintáxis más detallada:</p>
 <pre>
 scala&gt; def drop1(l: List[T forSome { type T }]) = l.tail
 drop1: (List[T forSome { type T }])List[T forSome { type T }]
