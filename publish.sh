@@ -12,7 +12,7 @@ trap "rm -fr $out" 0 1 2
 
 git clone $root/.git $out
 cd $out
-git remote set-url origin git@github.com:twitter/scala_school.git
+git remote set-url origin git@github.com:scalamx/scala_school.git
 git fetch
 git checkout gh-pages
 cd $root
